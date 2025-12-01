@@ -3,25 +3,42 @@ const fs = require('fs');
 const path = require('path');
 
 const PORT = 3000;
-const VERSION = fs.readFileSync('./VERSION', 'utf8').trim();
+
+// Función para leer la versión actual (se lee cada vez para tener siempre la última)
+function getVersion() {
+    try {
+        return fs.readFileSync('./VERSION', 'utf8').trim();
+    } catch (error) {
+        return '0.0.0';
+    }
+}
+
+// Leer versión inicial para mostrar en el log
+const INITIAL_VERSION = getVersion();
 
 const server = http.createServer((req, res) => {
-    let filePath = '.' + req.url;
-    
-    // Ruta para la API de versión
+    // Ruta para la API de versión (lee la versión actual cada vez)
     if (req.url === '/api/version') {
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ version: VERSION }));
+        const currentVersion = getVersion();
+        res.writeHead(200, { 
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+        });
+        res.end(JSON.stringify({ version: currentVersion }));
         return;
     }
     
-    // Si es la raíz, servir index.html
-    if (filePath === './') {
+    // Determinar la ruta del archivo
+    let filePath;
+    if (req.url === '/') {
         filePath = './public/index.html';
-    }
-    
-    // Si no tiene extensión, asumir que está en public
-    if (!path.extname(filePath)) {
+    } else if (req.url.startsWith('/api/')) {
+        // Si es otra ruta de API que no existe
+        res.writeHead(404, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Not found' }));
+        return;
+    } else {
+        // Archivos estáticos desde la carpeta public
         filePath = path.join('./public', req.url);
     }
     
@@ -64,7 +81,8 @@ const server = http.createServer((req, res) => {
 
 server.listen(PORT, () => {
     console.log('🚀 Servidor iniciado en http://localhost:' + PORT);
-    console.log(`📦 Versión: ${VERSION}`);
+    console.log(`📦 Versión inicial: ${INITIAL_VERSION}`);
     console.log('✅ Listo para probar el versionado automático');
+    console.log('💡 La versión se actualiza automáticamente al cambiar el archivo VERSION');
 });
 

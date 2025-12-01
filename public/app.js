@@ -1,14 +1,23 @@
 // Cargar versión desde el servidor
 fetch('/api/version')
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Error al obtener la versión');
+        }
+        return response.json();
+    })
     .then(data => {
-        document.getElementById('version').textContent = data.version;
-        document.getElementById('versionValue').textContent = data.version;
+        if (data && data.version) {
+            document.getElementById('versionValue').textContent = data.version;
+            document.title = `Test Webhook - Versión ${data.version}`;
+        } else {
+            throw new Error('Versión no encontrada en la respuesta');
+        }
     })
     .catch(error => {
         console.error('Error al cargar la versión:', error);
-        document.getElementById('version').textContent = 'N/A';
-        document.getElementById('versionValue').textContent = 'N/A';
+        document.getElementById('versionValue').textContent = 'Error';
+        document.title = 'Test Webhook - Error';
     });
 
 // Función para cambiar el mensaje (solo para demostración)
