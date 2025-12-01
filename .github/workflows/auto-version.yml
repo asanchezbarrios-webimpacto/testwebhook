@@ -37,13 +37,55 @@ jobs:
           echo "current=$CURRENT_VERSION" >> $GITHUB_OUTPUT
           echo "Current version: $CURRENT_VERSION"
 
+      - name: Determine version increment type
+        id: version_type
+        run: |
+          # Obtener los commits del push/merge
+          # Intentar obtener commits desde el evento, si no, usar los últimos commits
+          if [ -n "${{ github.event.before }}" ] && [ "${{ github.event.before }}" != "0000000000000000000000000000000000000000" ]; then
+            COMMITS=$(git log --pretty=format:"%s" ${{ github.event.before }}..${{ github.event.after }} 2>/dev/null || echo "")
+          fi
+          
+          # Si no hay commits del evento, obtener los últimos 10 commits (excluyendo los de versionado)
+          if [ -z "$COMMITS" ] || [ -z "$(echo "$COMMITS" | grep -v 'chore: bump version')" ]; then
+            COMMITS=$(git log --pretty=format:"%s" -10 | grep -v 'chore: bump version' | head -10)
+          fi
+          
+          # Si aún no hay commits, usar el último commit
+          if [ -z "$COMMITS" ]; then
+            COMMITS=$(git log -1 --pretty=format:"%s")
+          fi
+          
+          echo "=== Commits analizados ==="
+          echo "$COMMITS"
+          echo "=========================="
+          
+          # Inicializar como patch (por defecto)
+          INCREMENT_TYPE="patch"
+          
+          # Buscar indicadores de cambio mayor (major) - tiene prioridad más alta
+          if echo "$COMMITS" | grep -qiE "(BREAKING CHANGE|major|!:|breaking)"; then
+            INCREMENT_TYPE="major"
+            echo "🔴 Cambio MAJOR detectado (BREAKING CHANGE o !:)"
+          # Buscar indicadores de cambio menor (minor) - nuevas features
+          elif echo "$COMMITS" | grep -qiE "(^feat|^feature|minor|new.*feature)"; then
+            INCREMENT_TYPE="minor"
+            echo "🟡 Cambio MINOR detectado (feat: o nueva feature)"
+          # Por defecto es patch (fixes, docs, refactor, etc.)
+          else
+            INCREMENT_TYPE="patch"
+            echo "🟢 Cambio PATCH detectado (fix, docs, refactor, etc.)"
+          fi
+          
+          echo "increment_type=$INCREMENT_TYPE" >> $GITHUB_OUTPUT
+          echo "✅ Tipo de incremento determinado: $INCREMENT_TYPE"
+
       - name: Increment version
         id: increment
         run: |
-          # Incrementar versión (patch para cada merge a master)
-          INCREMENT_TYPE="patch"
+          INCREMENT_TYPE="${{ steps.version_type.outputs.increment_type }}"
           
-          echo "increment_type=$INCREMENT_TYPE" >> $GITHUB_OUTPUT
+          echo "Incrementando versión tipo: $INCREMENT_TYPE"
           
           # Incrementar versión
           node scripts/version.js $INCREMENT_TYPE

@@ -12,13 +12,21 @@ Proyecto simple para probar un sistema de versionado automático que incrementa 
 
 ## Cómo funciona
 
-**Merge a `master`**: Incrementa el patch (0.0.1 → 0.0.2)
+**Merge a `master`**: El sistema analiza los mensajes de commit y determina automáticamente el tipo de incremento:
+
+- **MAJOR** (1.0.0 → 2.0.0): Si detecta `BREAKING CHANGE`, `major`, o `!:` en los commits
+- **MINOR** (0.1.0 → 0.2.0): Si detecta `feat:`, `feature:`, o `minor` en los commits
+- **PATCH** (0.1.0 → 0.1.1): Por defecto para `fix:`, `docs:`, `refactor:`, etc.
 
 El workflow de GitHub Actions se ejecuta automáticamente cuando se hace push a `master` y:
-- Incrementa la versión (patch)
+- Analiza los mensajes de commit del merge
+- Determina el tipo de incremento (major/minor/patch)
+- Incrementa la versión según corresponda
 - Actualiza `VERSION` y `package.json`
 - Hace commit del cambio
 - Crea un tag de Git con la nueva versión
+
+📖 Ver [CONVENTIONAL_COMMITS.md](CONVENTIONAL_COMMITS.md) para más detalles sobre cómo usar Conventional Commits.
 
 ## Uso manual
 
