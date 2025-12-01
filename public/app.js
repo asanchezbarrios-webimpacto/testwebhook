@@ -202,8 +202,169 @@ function initGlobe() {
     });
 }
 
+// Panel de estadísticas
+function initStats() {
+    const cpuBar = document.getElementById('cpuBar');
+    const memoryBar = document.getElementById('memoryBar');
+    const networkBar = document.getElementById('networkBar');
+    const cpuUsage = document.getElementById('cpuUsage');
+    const memoryUsage = document.getElementById('memoryUsage');
+    const networkSpeed = document.getElementById('networkSpeed');
+    const uptime = document.getElementById('uptime');
+    
+    let startTime = Date.now();
+    
+    setInterval(() => {
+        // Simular CPU usage (0-100%)
+        const cpu = Math.floor(Math.random() * 40) + 20;
+        cpuBar.style.width = cpu + '%';
+        cpuUsage.textContent = cpu + '%';
+        
+        // Simular Memory usage
+        const mem = Math.floor(Math.random() * 30) + 40;
+        memoryBar.style.width = mem + '%';
+        memoryUsage.textContent = mem + '%';
+        
+        // Simular Network speed
+        const net = Math.floor(Math.random() * 500) + 100;
+        networkBar.style.width = Math.min(100, (net / 10)) + '%';
+        networkSpeed.textContent = net + ' KB/s';
+        
+        // Calcular uptime
+        const elapsed = Date.now() - startTime;
+        const hours = Math.floor(elapsed / 3600000);
+        const minutes = Math.floor((elapsed % 3600000) / 60000);
+        const seconds = Math.floor((elapsed % 60000) / 1000);
+        uptime.textContent = 
+            String(hours).padStart(2, '0') + ':' +
+            String(minutes).padStart(2, '0') + ':' +
+            String(seconds).padStart(2, '0');
+    }, 1000);
+}
+
+// Gráfico de actividad
+function initActivityChart() {
+    const canvas = document.getElementById('activityChart');
+    const ctx = canvas.getContext('2d');
+    
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+    
+    const data = [];
+    const maxDataPoints = 100;
+    const chartHeight = canvas.height - 20;
+    const chartWidth = canvas.width - 20;
+    
+    // Inicializar datos
+    for (let i = 0; i < maxDataPoints; i++) {
+        data.push(Math.random() * chartHeight);
+    }
+    
+    function drawChart() {
+        // Limpiar canvas
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Dibujar grid
+        ctx.strokeStyle = 'rgba(0, 255, 0, 0.1)';
+        ctx.lineWidth = 1;
+        for (let i = 0; i < 5; i++) {
+            const y = (chartHeight / 4) * i + 10;
+            ctx.beginPath();
+            ctx.moveTo(10, y);
+            ctx.lineTo(canvas.width - 10, y);
+            ctx.stroke();
+        }
+        
+        // Dibujar línea de datos
+        ctx.strokeStyle = '#00ff00';
+        ctx.lineWidth = 2;
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = '#00ff00';
+        ctx.beginPath();
+        
+        const step = chartWidth / maxDataPoints;
+        
+        for (let i = 0; i < data.length; i++) {
+            const x = 10 + (i * step);
+            const y = 10 + data[i];
+            
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+        
+        // Agregar nuevo punto y eliminar el más antiguo
+        data.shift();
+        data.push(Math.random() * chartHeight);
+    }
+    
+    setInterval(drawChart, 100);
+    
+    window.addEventListener('resize', () => {
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+    });
+}
+
+// Logs del sistema
+function initSystemLogs() {
+    const logsContainer = document.getElementById('logsContainer');
+    const logMessages = [
+        '[SYSTEM] Proceso iniciado correctamente',
+        '[NETWORK] Nueva conexión establecida',
+        '[SECURITY] Escaneo de seguridad completado',
+        '[DATABASE] Consulta ejecutada: 0.023s',
+        '[CACHE] Cache actualizado',
+        '[API] Request procesado: /api/version',
+        '[MONITOR] CPU usage: normal',
+        '[NETWORK] Paquete transmitido: 1024 bytes',
+        '[SYSTEM] Memoria liberada: 15MB',
+        '[SECURITY] Firewall: todas las reglas activas',
+        '[DATABASE] Índice optimizado',
+        '[API] Response time: 12ms',
+        '[CACHE] Hit rate: 94%',
+        '[NETWORK] Latencia: 23ms',
+        '[SYSTEM] Garbage collection completado'
+    ];
+    
+    let logIndex = 0;
+    
+    function addLog() {
+        const logEntry = document.createElement('div');
+        logEntry.className = 'log-entry';
+        logEntry.textContent = logMessages[logIndex % logMessages.length];
+        
+        logsContainer.appendChild(logEntry);
+        
+        // Mantener solo los últimos 20 logs
+        if (logsContainer.children.length > 20) {
+            logsContainer.removeChild(logsContainer.firstChild);
+        }
+        
+        // Auto-scroll
+        logsContainer.scrollTop = logsContainer.scrollHeight;
+        
+        logIndex++;
+    }
+    
+    // Agregar log inicial
+    addLog();
+    
+    // Agregar logs periódicamente
+    setInterval(addLog, 2000 + Math.random() * 3000);
+}
+
 // Inicializar cuando la página cargue
 document.addEventListener('DOMContentLoaded', function() {
     initMatrix();
     setTimeout(initGlobe, 500);
+    setTimeout(initStats, 1000);
+    setTimeout(initActivityChart, 1500);
+    setTimeout(initSystemLogs, 2000);
 });
