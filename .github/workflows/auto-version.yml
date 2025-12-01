@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - devel
 
 jobs:
   auto-version:
@@ -41,12 +40,8 @@ jobs:
       - name: Increment version
         id: increment
         run: |
-          # Determinar tipo de incremento según la rama
-          if [ "${{ github.ref }}" == "refs/heads/master" ]; then
-            INCREMENT_TYPE="minor"
-          else
-            INCREMENT_TYPE="patch"
-          fi
+          # Incrementar versión (patch para cada merge a master)
+          INCREMENT_TYPE="patch"
           
           echo "increment_type=$INCREMENT_TYPE" >> $GITHUB_OUTPUT
           
