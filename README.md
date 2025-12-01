@@ -49,8 +49,32 @@ Esto iniciará un servidor web en `http://localhost:3000` donde podrás ver:
 
 Cada vez que cambies el contenido de `public/index.html` o cualquier archivo y hagas merge a `devel` o `master`, la versión se incrementará automáticamente.
 
+## Configuración de Permisos en GitHub
+
+Para que el workflow pueda hacer push automáticamente, necesitas configurar los permisos:
+
+### Opción 1: Configuración del Repositorio (Recomendado)
+
+1. Ve a tu repositorio en GitHub
+2. Click en **Settings** → **Actions** → **General**
+3. En la sección **Workflow permissions**, selecciona:
+   - ✅ **Read and write permissions**
+   - ✅ **Allow GitHub Actions to create and approve pull requests**
+4. Click en **Save**
+
+### Opción 2: Usar Personal Access Token (PAT)
+
+Si la opción 1 no funciona o necesitas más control:
+
+1. Ve a GitHub → **Settings** → **Developer settings** → **Personal access tokens** → **Tokens (classic)**
+2. Genera un nuevo token con permisos `repo`
+3. En tu repositorio, ve a **Settings** → **Secrets and variables** → **Actions**
+4. Crea un nuevo secret llamado `PAT` con el valor de tu token
+5. Actualiza el workflow para usar `${{ secrets.PAT }}` en lugar de `${{ secrets.GITHUB_TOKEN }}`
+
 ## Notas
 
-- Asegúrate de tener permisos de escritura en el repositorio para que el workflow pueda hacer push
+- El workflow ya incluye los permisos necesarios (`contents: write`)
 - El workflow usa `[skip ci]` en el mensaje de commit para evitar bucles infinitos
+- Si usas la Opción 1, no necesitas hacer nada más, el workflow funcionará automáticamente
 
