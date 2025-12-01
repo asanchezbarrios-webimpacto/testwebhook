@@ -1,0 +1,17 @@
+{
+  "name": "testwebook",
+  "version": "0.0.1",
+  "description": "Proyecto simple para probar versionado automático",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "version:patch": "node scripts/version.js patch",
+    "version:minor": "node scripts/version.js minor",
+    "version:major": "node scripts/version.js major"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
+

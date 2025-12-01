@@ -1,0 +1,70 @@
+name: Auto Version on Merge
+
+on:
+  push:
+    branches:
+      - main
+      - devel
+
+jobs:
+  auto-version:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Configure Git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+      - name: Read current version
+        id: version
+        run: |
+          CURRENT_VERSION=$(cat VERSION | tr -d '\n')
+          echo "current=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+          echo "Current version: $CURRENT_VERSION"
+
+      - name: Increment version
+        id: increment
+        run: |
+          # Determinar tipo de incremento según la rama
+          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
+            INCREMENT_TYPE="minor"
+          else
+            INCREMENT_TYPE="patch"
+          fi
+          
+          echo "increment_type=$INCREMENT_TYPE" >> $GITHUB_OUTPUT
+          
+          # Incrementar versión
+          node scripts/version.js $INCREMENT_TYPE
+          
+          NEW_VERSION=$(cat VERSION | tr -d '\n')
+          echo "new=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "New version: $NEW_VERSION"
+
+      - name: Commit version bump
+        run: |
+          git add VERSION package.json
+          git commit -m "chore: bump version to ${{ steps.increment.outputs.new }} [skip ci]" || exit 0
+
+      - name: Push changes
+        run: |
+          git push origin ${{ github.ref_name }}
+
+      - name: Create Git Tag
+        run: |
+          git tag -a "v${{ steps.increment.outputs.new }}" -m "Version ${{ steps.increment.outputs.new }}"
+          git push origin "v${{ steps.increment.outputs.new }}"
+

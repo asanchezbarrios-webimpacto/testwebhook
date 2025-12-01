@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Webhook - Versión <span id="version"></span></title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1 class="title">¡Hola Mundo! 👋</h1>
+            <p class="subtitle">Este es un proyecto de prueba para versionado automático</p>
+            <div class="version-badge">
+                <span class="version-label">Versión:</span>
+                <span class="version-value" id="versionValue"></span>
+            </div>
+            <div class="info">
+                <p>🔧 Cada vez que cambies este mensaje y hagas merge a <code>devel</code> o <code>main</code>, la versión se incrementará automáticamente.</p>
+            </div>
+            <button class="btn" onclick="changeMessage()">Cambiar Mensaje</button>
+            <p class="message" id="message">Mensaje original: Todo funciona correctamente ✅</p>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
+
