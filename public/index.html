@@ -32,6 +32,55 @@
                     <p id="connectionInfo">Inicializando conexiones...</p>
                 </div>
             </div>
+            
+            <div class="stats-panel">
+                <h2 class="panel-title">PANEL DE ESTADÍSTICAS</h2>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-label">CPU USAGE</div>
+                        <div class="stat-value" id="cpuUsage">0%</div>
+                        <div class="stat-bar">
+                            <div class="stat-bar-fill" id="cpuBar"></div>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">MEMORY</div>
+                        <div class="stat-value" id="memoryUsage">0%</div>
+                        <div class="stat-bar">
+                            <div class="stat-bar-fill" id="memoryBar"></div>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">NETWORK</div>
+                        <div class="stat-value" id="networkSpeed">0 KB/s</div>
+                        <div class="stat-bar">
+                            <div class="stat-bar-fill" id="networkBar"></div>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">UPTIME</div>
+                        <div class="stat-value" id="uptime">00:00:00</div>
+                        <div class="stat-indicator">
+                            <span class="status-dot"></span>
+                            <span>ONLINE</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="activity-graph">
+                <h2 class="panel-title">ACTIVIDAD EN TIEMPO REAL</h2>
+                <canvas id="activityChart"></canvas>
+            </div>
+            
+            <div class="system-logs">
+                <h2 class="panel-title">SISTEM LOGS</h2>
+                <div class="logs-container" id="logsContainer">
+                    <div class="log-entry">[SYSTEM] Inicializando módulos...</div>
+                    <div class="log-entry">[NETWORK] Conexión establecida</div>
+                    <div class="log-entry">[SECURITY] Firewall activo</div>
+                </div>
+            </div>
         </div>
     </div>
     
