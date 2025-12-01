@@ -7,22 +7,35 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <canvas id="matrix"></canvas>
+    
     <div class="container">
-        <div class="card">
-            <h1 class="title">¡Hola Mundo! 👋</h1>
-            <p class="subtitle">Este es un proyecto de prueba para versionado automático</p>
+        <div class="content">
+            <h1 class="title">TEST WEBHOOK</h1>
+            <p class="subtitle">Sistema de versionado automático</p>
+            
             <div class="version-badge">
-                <span class="version-label">Versión:</span>
-                <span class="version-value" id="versionValue">Cargando...</span>
+                <span class="version-label">VERSIÓN:</span>
+                <span class="version-value" id="versionValue">LOADING...</span>
             </div>
+            
             <div class="info">
-                <p>🔧 Cada vez que cambies este mensaje y hagas merge a <code>master</code>, la versión se incrementará automáticamente.</p>
+                <p>Merge a <code>master</code> incrementa la versión automáticamente</p>
             </div>
-            <button class="btn" onclick="changeMessage()">Cambiar Mensaje</button>
-            <p class="message" id="message">Mensaje original: Todo funciona correctamente ✅</p>
+            
+            <button class="btn" onclick="changeMessage()">CAMBIAR MENSAJE</button>
+            <p class="message" id="message">Sistema operativo</p>
+            
+            <div class="globe-container">
+                <canvas id="globe"></canvas>
+                <div class="globe-info">
+                    <p id="connectionInfo">Inicializando conexiones...</p>
+                </div>
+            </div>
         </div>
     </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
-
