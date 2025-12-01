@@ -1,6 +1,6 @@
 # Test Webhook - Versionado Automático
 
-Proyecto simple para probar un sistema de versionado automático que incrementa la versión cada vez que se hace merge a `devel` o `main`.
+Proyecto simple para probar un sistema de versionado automático que incrementa la versión cada vez que se hace merge a `master`.
 
 ## Estructura
 
@@ -12,11 +12,10 @@ Proyecto simple para probar un sistema de versionado automático que incrementa 
 
 ## Cómo funciona
 
-1. **Merge a `devel`**: Incrementa el patch (0.0.1 → 0.0.2)
-2. **Merge a `master`**: Incrementa el minor (0.0.1 → 0.1.0)
+**Merge a `master`**: Incrementa el patch (0.0.1 → 0.0.2)
 
-El workflow de GitHub Actions se ejecuta automáticamente cuando se hace push a estas ramas y:
-- Incrementa la versión
+El workflow de GitHub Actions se ejecuta automáticamente cuando se hace push a `master` y:
+- Incrementa la versión (patch)
 - Actualiza `VERSION` y `package.json`
 - Hace commit del cambio
 - Crea un tag de Git con la nueva versión
@@ -47,7 +46,7 @@ Esto iniciará un servidor web en `http://localhost:3000` donde podrás ver:
 - La versión actual del proyecto
 - Un botón para cambiar el mensaje (solo para demostración)
 
-Cada vez que cambies el contenido de `public/index.html` o cualquier archivo y hagas merge a `devel` o `master`, la versión se incrementará automáticamente.
+Cada vez que cambies el contenido de `public/index.html` o cualquier archivo y hagas merge a `master`, la versión se incrementará automáticamente.
 
 ## Configuración de Permisos en GitHub
 
