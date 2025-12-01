@@ -13,7 +13,7 @@ Proyecto simple para probar un sistema de versionado automático que incrementa 
 ## Cómo funciona
 
 1. **Merge a `devel`**: Incrementa el patch (0.0.1 → 0.0.2)
-2. **Merge a `main`**: Incrementa el minor (0.0.1 → 0.1.0)
+2. **Merge a `master`**: Incrementa el minor (0.0.1 → 0.1.0)
 
 El workflow de GitHub Actions se ejecuta automáticamente cuando se hace push a estas ramas y:
 - Incrementa la versión
@@ -47,7 +47,7 @@ Esto iniciará un servidor web en `http://localhost:3000` donde podrás ver:
 - La versión actual del proyecto
 - Un botón para cambiar el mensaje (solo para demostración)
 
-Cada vez que cambies el contenido de `public/index.html` o cualquier archivo y hagas merge a `devel` o `main`, la versión se incrementará automáticamente.
+Cada vez que cambies el contenido de `public/index.html` o cualquier archivo y hagas merge a `devel` o `master`, la versión se incrementará automáticamente.
 
 ## Notas
 
