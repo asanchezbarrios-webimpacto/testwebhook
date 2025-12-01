@@ -1,6 +1,6 @@
 {
   "name": "testwebook",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Proyecto simple para probar versionado automático",
   "main": "index.js",
   "scripts": {
